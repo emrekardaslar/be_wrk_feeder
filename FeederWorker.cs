@@ -93,7 +93,7 @@ namespace be_wrk_feeder
             };
 
             // Simulate a random failure (e.g., 15% chance)
-            if (new Random().Next(1, 101) <= 15)
+            if (new Random().Next(1, 101) <= 15 && false)
             {
                 _logger.LogWarning($"be_wrk_feeder: [!] Simulated Feeder failure for CorrelationId: {command.CorrelationId}");
                 response.IsSuccess = false;
