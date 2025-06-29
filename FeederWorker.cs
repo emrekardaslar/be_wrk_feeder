@@ -80,16 +80,16 @@ namespace be_wrk_feeder
 
             _logger.LogInformation($"be_wrk_feeder: [x] Processing FeederCommand (CorrelationId: {command.CorrelationId}) - CommandType: {command.CommandType}");
 
-            // Simulate fetching data asynchronously
-            await Task.Delay(1000);
-            string simulatedData = $"{{ \"id\": \"{Guid.NewGuid()}\", \"name\": \"SimulatedData-{new Random().Next(1000, 9999)}\", \"value\": {new Random().Next(1, 100)} }}";
+            // Simulate fetching a list of IDs asynchronously
+            await Task.Delay(500);
+            var ids = Enumerable.Range(0, 10).Select(_ => Guid.NewGuid().ToString()).ToList();
 
             // Prepare response
             var response = new FeederResponse
             {
                 CorrelationId = command.CorrelationId,
                 IsSuccess = true,
-                FetchedData = simulatedData
+                Ids = ids
             };
 
             // Simulate a random failure (e.g., 15% chance)
@@ -97,8 +97,8 @@ namespace be_wrk_feeder
             {
                 _logger.LogWarning($"be_wrk_feeder: [!] Simulated Feeder failure for CorrelationId: {command.CorrelationId}");
                 response.IsSuccess = false;
-                response.ErrorMessage = "Simulated data fetching failure. Source unavailable.";
-                response.FetchedData = null;
+                response.ErrorMessage = "Simulated ID fetching failure.";
+                response.Ids = new List<string>();
             }
 
             // Publish response using the injected service
